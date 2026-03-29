@@ -10,8 +10,7 @@ import {
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import "@/global.css";
-import { formatCurrency } from "@/lib/utils";
-import dayjs from "dayjs";
+import { formatCurrency, formatSubscriptionDateTime } from "@/lib/utils";
 import { styled } from "nativewind";
 import { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
@@ -26,6 +25,7 @@ export default function App() {
   return (
     <SafeAreaView className="flex-1  bg-background p-5 ">
       <FlatList
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <>
             <View className="home-header">
@@ -43,7 +43,7 @@ export default function App() {
                   {formatCurrency(HOME_BALANCE.amount)}
                 </Text>
                 <Text className="home-balance-date">
-                  {dayjs(HOME_BALANCE.nextRenewalDate).format("DD/MM")}
+                  {formatSubscriptionDateTime(HOME_BALANCE.nextRenewalDate)}
                 </Text>
               </View>
             </View>
