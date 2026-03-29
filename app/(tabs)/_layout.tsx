@@ -1,9 +1,11 @@
 import { tabs } from "@/constants/data";
 import { colors, components } from "@/constants/theme";
+import { useAuth } from "@clerk/expo";
 import { clsx } from "clsx";
-import { Tabs } from "expo-router";
-import { Image, View } from "react-native";
+import { Redirect, Tabs } from "expo-router";
+import { Alert, Image, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { icons } from "@/constants/icons";
 
 const tabBar = components.tabBar;
 
@@ -16,9 +18,19 @@ const TabIcon = ({ focused, icon }: TabIconProps) => {
     </View>
   );
 };
-
 const TabLayout = () => {
+  const { isSignedIn, isLoaded, signOut } = useAuth();
   const insets = useSafeAreaInsets();
+
+  // Wait for auth to load before rendering anything
+  if (!isLoaded) {
+    return null;
+  }
+
+  // Redirect to sign-in if user is not authenticated
+  if (!isSignedIn) {
+    return <Redirect href="/(auth)/sign-in" />;
+  }
 
   return (
     <Tabs
@@ -45,22 +57,50 @@ const TabLayout = () => {
         },
       }}
     >
-      {tabs.map((tab) => (
+      {isSignedIn ? (
+        tabs.map((tab) => (
+          <Tabs.Screen
+            key={tab.name}
+            name={tab.name}
+            options={{
+              title: tab.title,
+              tabBarIcon: ({ focused }) => (
+                <TabIcon focused={focused} icon={tab.icon} />
+              ),
+            }}
+          />
+        ))
+      ) : null}
+
+      {/* Conditionally render the logout button only when signed in */}
+      {isSignedIn ? (
         <Tabs.Screen
-          key={tab.name}
-          name={tab.name}
+          name="logout"
           options={{
-            title: tab.title,
+            title: "Logout",
             tabBarIcon: ({ focused }) => (
-              <TabIcon focused={focused} icon={tab.icon} />
+              <View className="tabs-icon">
+                <View className={focused ? "tabs-pill tabs-active" : "tabs-pill"}>
+                  <Image source={icons.logout} resizeMode="contain" className="tabs-glyph" />
+                </View>
+              </View>
+            ),
+            tabBarButton: (props) => (
+              <TouchableOpacity
+                style={props.style}
+                onPress={() => {
+                  Alert.alert("Log Out", "Are you sure you want to log out?", [
+                    { text: "Cancel", style: "cancel" },
+                    { text: "Log Out", style: "destructive", onPress: () => signOut() },
+                  ]);
+                }}
+              >
+                {props.children}
+              </TouchableOpacity>
             ),
           }}
         />
-      ))}
-      <Tabs.Screen
-        name="subscriptions/[id]"
-        options={{ title: "Subscriptions Details", href: null }}
-      />
+      ) : null}
     </Tabs>
   );
 };
