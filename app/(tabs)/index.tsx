@@ -6,6 +6,11 @@ import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
+/**
+ * Root screen component that displays a centered welcome message and navigation links.
+ *
+ * @returns The JSX element containing a safe-area container with a headline and three navigation links.
+ */
 export default function App() {
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-background ">
