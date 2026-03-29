@@ -78,11 +78,10 @@ const TabLayout = () => {
           name="logout"
           options={{
             title: "Logout",
-            // We use the add icon rotated 45deg to match the previous home screen signout icon
             tabBarIcon: ({ focused }) => (
               <View className="tabs-icon">
-                <View className="tabs-pill">
-                  <Image source={icons.add} resizeMode="contain" className="tabs-glyph" style={{ transform: [{ rotate: '45deg' }] }} />
+                <View className={focused ? "tabs-pill tabs-active" : "tabs-pill"}>
+                  <Image source={icons.logout} resizeMode="contain" className="tabs-glyph" />
                 </View>
               </View>
             ),

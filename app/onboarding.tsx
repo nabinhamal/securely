@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { posthog } from "@/lib/posthog";
 import { styled } from "nativewind";
 import React from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
@@ -43,7 +44,10 @@ const Onboarding = () => {
           {/* Get Started Button - White Pill Shape */}
           <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => router.push("/(auth)/sign-up")}
+            onPress={() => {
+              posthog.capture("onboarding_get_started");
+              router.push("/(auth)/sign-up");
+            }}
             className="w-full items-center justify-center rounded-full bg-white py-5 shadow-xl"
           >
             <Text className="text-xl font-sans-bold ">Get Started</Text>
