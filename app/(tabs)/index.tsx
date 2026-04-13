@@ -17,6 +17,11 @@ import { FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
+/**
+ * Root screen component that displays a centered welcome message and navigation links.
+ *
+ * @returns The JSX element containing a safe-area container with a headline and three navigation links.
+ */
 export default function App() {
   const { user } = useUser();
   const posthog = usePostHog();
